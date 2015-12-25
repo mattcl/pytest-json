@@ -1,0 +1,6 @@
+site_name: pytest-json
+site_description: Generate JSON test reports
+
+theme: readthedocs
+
+repo_url: https://github.com/mattcl/pytest-json
