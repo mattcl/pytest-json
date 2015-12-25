@@ -31,7 +31,8 @@ class JSONReport(object):
         report_dict = {
             'nodeid': report.nodeid,
             'duration': '{0:.2f}'.format(getattr(report, 'duration', 0.0)),
-            'outcome': report.outcome
+            'outcome': report.outcome,
+            'stage': report.when
         }
 
         if report.longrepr:
