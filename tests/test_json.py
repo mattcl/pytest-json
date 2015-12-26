@@ -1,24 +1,166 @@
 # -*- coding: utf-8 -*-
+import json
+import pytest
+import sys
+
+PY3 = sys.version_info[0] == 3
 
 
-def test_json_path_fixture(testdir):
-    """Make sure that pytest accepts our fixture."""
+# note that we don't have duration in here, but this is because we can't
+# assert on something that will change test to test (and I don't know how
+# to mock time for the underlying pytest call)
+@pytest.fixture
+def expected_data():
 
+    # FIXME:- MCL - 2015-12-26
+    # I'm not sure why json loads in putting the 'u' in the middle of a string,
+    # but I need to get the other stuff working first. Revisit.
+    if not PY3:
+        skipped_longrepr = "('test_report.py', 47, u'Skipped: testing skip')"
+    else:
+        skipped_longrepr = "('test_report.py', 47, 'Skipped: testing skip')"
+
+    return {
+        "test_report.py::test_xfailed_but_passing": {
+            "teardown": {
+                "outcome": "passed"
+            },
+            "setup": {
+                "outcome": "passed"
+            },
+            "call": {
+                "xfail_reason": "testing xfail",
+                "Captured stdout call": "I am xfailed but passing\n",
+                "outcome": "xpassed"
+            }
+        },
+        "test_report.py::test_skipped": {
+            "teardown": {
+                "outcome": "passed"
+            },
+            "setup": {
+                "longrepr": skipped_longrepr,
+                "outcome": "skipped"
+            }
+        },
+        "test_report.py::test_fail_during_setup": {
+            "teardown": {
+                "outcome": "passed"
+            },
+            "setup": {
+                "longrepr": "request = <SubRequest 'fail_setup_fixture' for <Function 'test_fail_during_setup'>>\n\n    @pytest.fixture\n    def fail_setup_fixture(request):\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:13: AssertionError",
+                "outcome": "error"
+            }
+        },
+        "test_report.py::test_basic": {
+            "teardown": {
+                "outcome": "passed"
+            },
+            "setup": {
+                "outcome": "passed"
+            },
+            "call": {
+                "Captured stdout call": "call str\n",
+            }
+        },
+        "test_report.py::test_fail_with_fixture": {
+            "teardown": {
+                "Captured stdout teardown": "tearing down\n",
+                "outcome": "passed"
+            },
+            "setup": {
+                "Captured stdout setup": "setting up\n",
+                "outcome": "passed"
+            },
+            "call": {
+                "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError",
+                "Captured stdout call": "call str 2\n",
+                "outcome": "failed"
+            }
+        },
+        "test_report.py::test_fail_during_teardown": {
+            "teardown": {
+                "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError",
+                "outcome": "error"
+            },
+            "setup": {
+                "outcome": "passed"
+            },
+            "call": {
+                "Captured stdout call": "I will fail during teardown\n",
+                "outcome": "passed"
+            }
+        },
+        "test_report.py::test_xfailed": {
+            "teardown": {
+                "outcome": "passed"
+            },
+            "setup": {
+                "outcome": "passed"
+            },
+            "call": {
+                "longrepr": "@pytest.mark.xfail(reason='testing xfail')\n    def test_xfailed():\n        print('I am xfailed')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:33: AssertionError",
+                "xfail_reason": "testing xfail",
+                "Captured stdout call": "I am xfailed\n",
+                "outcome": "xfailed"
+            }
+        }
+    }
+
+
+# so because testdir can't be session-scoped, do this all in one test
+def test_report(testdir, expected_data):
     # create a temporary pytest test module
     testdir.makepyfile("""
         import pytest
 
-        def test_sth(json_path):
-            print('goodbye')
+        @pytest.fixture
+        def setup_teardown_fixture(request):
+            print('setting up')
+            def fn():
+                print('tearing down')
+
+            request.addfinalizer(fn)
+
+        @pytest.fixture
+        def fail_setup_fixture(request):
+            assert 1 == 3
+
+        @pytest.fixture
+        def fail_teardown_fixture(request):
+            def fn():
+                assert 1 == 3
+
+            request.addfinalizer(fn)
+
+        def test_basic(json_path):
+            print('call str')
             assert json_path == "herpaderp.json"
 
-        def test_foo(json_path):
-            print('hello')
+        def test_fail_with_fixture(setup_teardown_fixture):
+            print('call str 2')
             assert 1 == 2
 
-        @pytest.mark.xfail(reason='testing')
-        def test_bar(json_path):
-            print('you say')
+        @pytest.mark.xfail(reason='testing xfail')
+        def test_xfailed():
+            print('I am xfailed')
+            assert 1 == 2
+
+        @pytest.mark.xfail(reason='testing xfail')
+        def test_xfailed_but_passing():
+            print('I am xfailed but passing')
+            assert 1 == 1
+
+        def test_fail_during_setup(fail_setup_fixture):
+            print('I failed during setup')
+            assert 1 == 1
+
+        def test_fail_during_teardown(fail_teardown_fixture):
+            print('I will fail during teardown')
+            assert 1 == 1
+
+        @pytest.mark.skipif(True, reason='testing skip')
+        def test_skipped():
             assert 1 == 2
     """)
 
@@ -28,16 +170,26 @@ def test_json_path_fixture(testdir):
         '-v'
     )
 
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        '*::test_sth PASSED',
-    ])
-
     with open('herpaderp.json', 'r') as f:
-        assert f.read() == ''
+        report = json.load(f)
 
-    # make sure that that we get a '0' exit code for the testsuite
-    assert result.ret == 0
+    # summary
+    assert report['summary']['num_tests'] == 7
+    assert report['summary']['xfailed'] == 1
+    assert report['summary']['failed'] == 1
+    assert report['summary']['passed'] == 2
+    assert report['summary']['error'] == 2
+    assert report['summary']['xpassed'] == 1
+    assert report['summary']['skipped'] == 1
+
+    # tests
+    assert len(report['tests']) == 7
+    for test, stage_data in expected_data.items():
+        assert test in report['tests']
+
+        for stage, data in stage_data.items():
+            for key, value in data.items():
+                assert report['tests'][test][stage][key] == value
 
 
 def test_help_message(testdir):
@@ -48,31 +200,3 @@ def test_help_message(testdir):
     result.stdout.fnmatch_lines([
         '*--json=JSON_PATH*Where to store the JSON report',
     ])
-
-
-# def test_json_path_ini_setting(testdir):
-#     testdir.makeini("""
-#         [pytest]
-#         json_path = foo.json
-#     """)
-
-#     testdir.makepyfile("""
-#         import pytest
-
-#         @pytest.fixture
-#         def json_path(request):
-#             return request.config.getini('json_path')
-
-#         def test_hello_world(json_path):
-#             assert json_path == 'foo.json'
-#     """)
-
-#     result = testdir.runpytest('-v')
-
-#     # fnmatch_lines does an assertion internally
-#     result.stdout.fnmatch_lines([
-#         '*::test_hello_world PASSED',
-#     ])
-
-#     # make sure that that we get a '0' exit code for the testsuite
-#     assert result.ret == 0
