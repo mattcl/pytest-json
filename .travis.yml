@@ -16,11 +16,11 @@ before_cache:
 cache:
   directories:
   - $HOME/.cache/pip
-deploy:
-  provider: pypi
-  user: mattcl
-  password:
-    secure: ap2G6fzAYHdm2CGOO01xcmC7pqBJb1KfufCCgoFQ6AXzv0EXzz4ety2/LXGwFU7RNHpUqotgdiFMQsNPfXdyY1ge3iAU6heToAM6ErXbPfbOe/u1guWBOto8k9hX/Ushz5nsgSNaxZR8OcYlPsn87iSPxModUNp6TSacrjAyAGRMrJ98Xfyk8AP0THbHDYO18+MESVsxMwpx7bvo6emYNQG35WUUvBwgYFW9/DTQW1HyNvDvlCmJABecpYBbsVSxpgD5MDYdNMFjj0uAuKeYYj+WqtDg8W/sc7RoGnA442o8Zib8VTnsqhlqHqAtsZPBTvDrTtjgsYMzCGhRP4c191FJH8LT284b6ZSoyTzgWrrl4fCOihTrQopG1E1jaap1V3uVAir8ogefexjBSw1MuxAYJk360Lr2XUmBlRe+3xzWNAdJijOB/mt2Er19snHCuuECG2HxgKTR20H5uokJNA5ZnQTxfngrCMtpcngzJpf6j/6xhZ6Myv6jmwn0ZB7ePVpdV8K5B3cBhMUt8einObNcFmY0PBS9ZEra0mZEr/l6OEBAdBuYp/L1bU6Kf0wxj8Ki6xIJceGOdF8GAjAMHnVFxB+S36JiFGwWqEhYc5Tli+smzItYoIPFKDaDUgQ/MDzBb1hAQCpmr9YbmZhTQgt2pSVup4E2Ki4wYq90yeU=
-  on:
-    tags: true
-    branch: master
+# deploy:
+#   provider: pypi
+#   user: mattcl
+#   password:
+#     secure: ap2G6fzAYHdm2CGOO01xcmC7pqBJb1KfufCCgoFQ6AXzv0EXzz4ety2/LXGwFU7RNHpUqotgdiFMQsNPfXdyY1ge3iAU6heToAM6ErXbPfbOe/u1guWBOto8k9hX/Ushz5nsgSNaxZR8OcYlPsn87iSPxModUNp6TSacrjAyAGRMrJ98Xfyk8AP0THbHDYO18+MESVsxMwpx7bvo6emYNQG35WUUvBwgYFW9/DTQW1HyNvDvlCmJABecpYBbsVSxpgD5MDYdNMFjj0uAuKeYYj+WqtDg8W/sc7RoGnA442o8Zib8VTnsqhlqHqAtsZPBTvDrTtjgsYMzCGhRP4c191FJH8LT284b6ZSoyTzgWrrl4fCOihTrQopG1E1jaap1V3uVAir8ogefexjBSw1MuxAYJk360Lr2XUmBlRe+3xzWNAdJijOB/mt2Er19snHCuuECG2HxgKTR20H5uokJNA5ZnQTxfngrCMtpcngzJpf6j/6xhZ6Myv6jmwn0ZB7ePVpdV8K5B3cBhMUt8einObNcFmY0PBS9ZEra0mZEr/l6OEBAdBuYp/L1bU6Kf0wxj8Ki6xIJceGOdF8GAjAMHnVFxB+S36JiFGwWqEhYc5Tli+smzItYoIPFKDaDUgQ/MDzBb1hAQCpmr9YbmZhTQgt2pSVup4E2Ki4wYq90yeU=
+#   on:
+#     tags: true
+#     branch: master
