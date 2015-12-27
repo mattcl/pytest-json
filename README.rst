@@ -93,7 +93,10 @@ Additionally, pytest-json ignores the ``extra`` field on reports.
 Example json
 ------------
 
-see example.json
+A formatted example of the output can be found in example.json
+
+The actual output is not formatted, but this was passed through jq for
+readability.
 
 Contributing
 ------------
