@@ -60,11 +60,37 @@ You can modify ``request.config._json_environment`` in a fixture
       request.config._json_environment.append(('herp', 'derp'))
 
 
+Adding metadata per test stage
+------------------------------
+
+.. code-block:: python
+  # conftest.py
+  @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+  def pytest_runtest_makereport(item, call):
+      outcome = yield
+      report = outcome.get_result()
+      if report.when == 'call':
+          report.metadata = {
+              'foo': 'bar'
+          }
+      elif report.when == 'setup':
+          report.metadata = {
+              'hoof': 'doof'
+          }
+      elif report.when == 'teardown':
+          report.metadata = {
+              'herp': 'derp'
+          }
+
+
 Compatibility with pytest-html
 ------------------------------
 
 To avoid issues with pytest-html, pytest-json uses
 ``request.config._json_environment`` instead of ``request.config._environment``
+
+Additionally, pytest-json ignores the ``extra`` field on reports.
+
 
 Contributing
 ------------

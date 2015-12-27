@@ -165,7 +165,7 @@ def test_report(testdir, expected_data):
     """)
 
     # run pytest with the following cmd args
-    result = testdir.runpytest(
+    testdir.runpytest(
         '--json=herpaderp.json',
         '-v'
     )
@@ -190,6 +190,50 @@ def test_report(testdir, expected_data):
         for stage, data in stage_data.items():
             for key, value in data.items():
                 assert report['tests'][test][stage][key] == value
+
+
+def test_metadata(testdir):
+    testdir.makeconftest("""
+        import pytest
+
+        @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+        def pytest_runtest_makereport(item, call):
+            outcome = yield
+            report = outcome.get_result()
+            if report.when == 'call':
+                report.metadata = {
+                    'foo': 'bar'
+                }
+            elif report.when == 'setup':
+                report.metadata = {
+                    'hoof': 'doof'
+                }
+            elif report.when == 'teardown':
+                report.metadata = {
+                    'herp': 'derp'
+                }
+    """)
+
+    testdir.makepyfile("""
+        def test_foo():
+            assert 1 == 1
+    """)
+
+    # run pytest with the following cmd args
+    testdir.runpytest(
+        '--json=herpaderp.json',
+        '-v'
+    )
+
+    with open('herpaderp.json', 'r') as f:
+        report = json.load(f)
+
+    assert len(report['tests']) == 1
+
+    foo_data = report['tests']['test_metadata.py::test_foo']
+    assert foo_data['call']['metadata'] == {'foo': 'bar'}
+    assert foo_data['setup']['metadata'] == {'hoof': 'doof'}
+    assert foo_data['teardown']['metadata'] == {'herp': 'derp'}
 
 
 def test_help_message(testdir):

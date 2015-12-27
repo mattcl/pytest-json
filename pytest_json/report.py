@@ -58,6 +58,9 @@ class JSONReport(object):
             'outcome': outcome
         }
 
+        if hasattr(report, 'metadata'):
+            report_dict['metadata'] = report.metadata
+
         if hasattr(report, 'wasxfail'):
             report_dict['xfail_reason'] = report.wasxfail
 
