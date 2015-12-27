@@ -2,6 +2,7 @@
 import json
 import pytest
 import sys
+import os
 
 PY3 = sys.version_info[0] == 3
 
@@ -133,9 +134,9 @@ def test_report(testdir, expected_data):
 
             request.addfinalizer(fn)
 
-        def test_basic(json_path):
+        def test_basic(json_report_path):
             print('call str')
-            assert json_path == "herpaderp.json"
+            assert json_report_path == "herpaderp.json"
 
         def test_fail_with_fixture(setup_teardown_fixture):
             print('call str 2')
@@ -236,11 +237,67 @@ def test_metadata(testdir):
     assert foo_data['teardown']['metadata'] == {'herp': 'derp'}
 
 
+def test_ini(testdir):
+    testdir.makeini("""
+        [pytest]
+        json_report = foo.json
+    """)
+
+    testdir.makepyfile("""
+        def test_foo(json_report_path):
+            assert json_report_path == 'foo.json'
+    """)
+
+    # run pytest with the following cmd args
+    result = testdir.runpytest(
+        '-v'
+    )
+
+    assert os.path.exists('foo.json')
+    assert result.ret == 0
+
+
+def test_option_overrides_ini(testdir):
+    testdir.makeini("""
+        [pytest]
+        json_report = foo.json
+    """)
+
+    testdir.makepyfile("""
+        def test_foo(json_report_path):
+            assert json_report_path == 'bar.json'
+    """)
+
+    # run pytest with the following cmd args
+    result = testdir.runpytest(
+        '--json=bar.json',
+        '-v'
+    )
+
+    assert os.path.exists('bar.json')
+    assert result.ret == 0
+
+
+def test_no_json_ok(testdir):
+    testdir.makepyfile("""
+        def test_foo():
+            assert 1 == 1
+    """)
+
+    # run pytest with the following cmd args
+    result = testdir.runpytest(
+        '-v'
+    )
+
+    assert result.ret == 0
+
+
 def test_help_message(testdir):
     result = testdir.runpytest(
         '--help',
     )
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        '*--json=JSON_PATH*Where to store the JSON report',
+        '*--json=JSON_PATH*where to store the JSON report',
+        '*json_report (string)*where to store the JSON report',
     ])

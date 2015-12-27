@@ -47,6 +47,13 @@ Usage
 
   $ py.test --json=report.json
 
+or you can set the report path in an ini file::
+
+  [pytest]
+  json_report = report.json
+
+The command-line option will override the ini file
+
 
 Adding to environment
 ---------------------
@@ -64,6 +71,7 @@ Adding metadata per test stage
 ------------------------------
 
 .. code-block:: python
+
   # conftest.py
   @pytest.hookimpl(tryfirst=True, hookwrapper=True)
   def pytest_runtest_makereport(item, call):

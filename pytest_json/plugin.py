@@ -13,8 +13,9 @@ def pytest_addoption(parser):
         action='store',
         dest='json_path',
         default=None,
-        help='Where to store the JSON report'
+        help='where to store the JSON report'
     )
+    parser.addini('json_report', 'where to store the JSON report')
 
 
 # pytest-html uses _environment already, don't conflict with it
@@ -26,14 +27,25 @@ def json_environment(request):
         ('Platform', platform.platform())])
 
 
+def _json_path(config):
+    if config.option.json_path:
+        return config.option.json_path
+
+    if config.getini('json_report'):
+        return config.getini('json_report')
+
+    return None
+
+
 @pytest.fixture
-def json_path(request):
-    return request.config.option.json_path
+def json_report_path(request):
+    return _json_path(request.config)
 
 
 def pytest_configure(config):
     config._json_environment = []
-    json_path = config.option.json_path
+
+    json_path = _json_path(config)
 
     if json_path and not hasattr(config, 'slaveinput'):
         config._json = JSONReport(json_path)
