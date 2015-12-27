@@ -6,7 +6,6 @@ python:
 - '3.4'
 - '3.5'
 - 'pypy'
-
 install:
 - pip install tox
 - TOX_ENV=${TRAVIS_PYTHON_VERSION/[0-9].[0-9]/py${TRAVIS_PYTHON_VERSION/.}}
@@ -19,8 +18,8 @@ cache:
 deploy:
   provider: pypi
   user: mattcl
-  password:
-    secure: "Ih1/tmpnpbUxXRRhc9+BdPvnBrGbJh/M8wGZansdC53s/H7j1DPOeJQfgAfpLhYW2FyxblDKbTuDyrnm6hvgp/xIQfrDk7L2yEbJQa9641ox5gJLG8po65DnGD4ydKWqOWvRJNIX7U83b9osblV4ZTcwqA3Sn/DIXutnbmeBmNuVgissYgjeysYvcyMHOuPe5sdg48gLbYYSOMhEZJ25YdJy7W6+bzbF41RP4UnffndcmUl10DuEch3ROW4KHLWypwkDA0KBvbOtyn7Xc7SqBiTrJ3WukxJEHbwPrZQn1MNcLd6qgonB0nyydi/NTk6AVkkv4CHvx9zOOAbLucPgjlYF5keGiGqKDJ/Kpz9+LIqvLD9JLR9AypqBL7zK0mCLSfA8hI6N+RPDVeyoNrfIkCCn0K+6eU8TGhAZ6W/IbsWC0i5r98ec/Iddv0YKlNqOvZEu1TooKoGuvW0kHgAVT/Aw/en9159gK4yhkNQOL9LQ2XijqXshcXZYPJa8ydvLKz9KrsnmqF9E4sZtt3qlMFc4QQntgPb4xwqKDDEKn4s8frR2fvv24oWCEXJInKOrUEuGlXNB7lz2IDNia9Qslq3zznAnZZEuxqpiFEgHLaRHzOeh5nFYl9EGAI6eRR/alf03KqPOt+g2oNSzkfE9AC9Y7lOMoKMyIlSnWQ25m4g="
   on:
     tags: true
     branch: master
+  password:
+    secure: iCiZaXPREAv0w+wKh3Wp8d07uRlyGOOTcnNoihw5ohqRIsu6oaoALnkgeLQf6sO7ZQcy5sjdJgitGEjNF5TGQl3s1cmntk8C53H++2bCVgPpLrQMpQUWOzdLDnoeW2q/qLxSJ0qQTsWPPgvJVAfVS8AtWchVRD4urDFKHg7lVOf10tp09YKnyhar6hUjrFQt6F9qMLcVxlVyWUBCspPfyCBLCCMCnLGP15PH//Sz9TrVAbM0C2S6M4g2wcbwcbaM3D1eegTe+J5e5dPHl2Tl7MtaNfAQRaHfAKpzCfJ3v3wvD228Hs/YmuB5SmwEdcclm9YIUhEJgsOBTwVctHwy5EhLGaevxVZs6oGvJzJLTYmQtBmFg3uHpnZDTkh5vcSYoTa7WGSMzRwTvqEJLliItC37VT+jOHma59TgW4a9xXYJMJ1G+tkLXFPJzzeFEKYPmguPzKLoI+DB0KH8t9I9ZucR+Uq0q7OPL6q0MUSX4yWR7z//nV6Hz8bJWRGCEhpht911Kk3mrcNGw9bX91eMqIdJxbAIo2l/4ys05vlu2rP9ERKmk0pIy/O9NPn8jQVAvI567+LtgjCNERRS7seiGHGC08aXQ0YV+EEwcoNgFxt1W3WAzsfZAtj9vW5ywYGzLJgGwHQqHgVdBj9IzukjaNia1Z/th9w+4faFQgNe1T4=
