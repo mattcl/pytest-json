@@ -1,3 +1,5 @@
+This readme is a work in progress
+
 pytest-json
 ===================================
 
@@ -9,7 +11,8 @@ pytest-json
     :target: https://ci.appveyor.com/project/mattcl/pytest-json/branch/master
     :alt: See Build Status on AppVeyor
 
-Generate JSON test reports
+pytest-json is a plugin for `py.test <http://pytest.org>`_ that generates JSON
+reports for test results
 
 ----
 
@@ -25,7 +28,8 @@ Features
 Requirements
 ------------
 
-* TODO
+- Python 2.7, 3.3, 3.4, 3.5
+- py.test 2.7 or newer
 
 
 Installation
@@ -33,13 +37,34 @@ Installation
 
 You can install "pytest-json" via `pip`_ from `PyPI`_::
 
-    $ pip install pytest-json
+  $ pip install pytest-json
 
 
 Usage
 -----
 
-* TODO
+.. code-block:: bash
+
+  $ py.test --json=report.json
+
+
+Adding to environment
+---------------------
+
+You can modify ``request.config._json_environment`` in a fixture
+
+.. code-block:: python
+
+  @pytest.fixture(scope='session', autouse=True):
+  def extra_json_environment(request):
+      request.config._json_environment.append(('herp', 'derp'))
+
+
+Compatibility with pytest-html
+------------------------------
+
+To avoid issues with pytest-html, pytest-json uses
+``request.config._json_environment`` instead of ``request.config._environment``
 
 Contributing
 ------------
