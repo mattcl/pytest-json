@@ -7,22 +7,12 @@ pytest-json
     :target: https://travis-ci.org/mattcl/pytest-json
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/mattcl/pytest-json?branch=master
-    :target: https://ci.appveyor.com/project/mattcl/pytest-json/branch/master
-    :alt: See Build Status on AppVeyor
-
 pytest-json is a plugin for `py.test <http://pytest.org>`_ that generates JSON
 reports for test results
 
 ----
 
 This `Pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `Cookiecutter-pytest-plugin`_ template.
-
-
-Features
---------
-
-* TODO
 
 
 Requirements
@@ -43,7 +33,7 @@ You can install "pytest-json" via `pip`_ from `PyPI`_::
 Usage
 -----
 
-.. code-block:: bash
+.. code-block::
 
   $ py.test --json=report.json
 
@@ -99,6 +89,11 @@ To avoid issues with pytest-html, pytest-json uses
 
 Additionally, pytest-json ignores the ``extra`` field on reports.
 
+
+Example json
+------------
+
+see example.json
 
 Contributing
 ------------
