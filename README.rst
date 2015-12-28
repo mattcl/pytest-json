@@ -1,3 +1,5 @@
+the json schema is highly in flux at the moment
+
 pytest-json
 ===================================
 
