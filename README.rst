@@ -44,6 +44,11 @@ or you can set the report path in an ini file::
 
 The command-line option will override the ini file
 
+There is an optional flag to normalize the generated report. This is intended
+for (easier) consumption by ember-data.::
+
+  $ py.test --json=report.json --normalize-ember
+
 
 Adding to environment
 ---------------------

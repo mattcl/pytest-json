@@ -41,16 +41,16 @@ def expected_data():
                 "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError",
                 "outcome": "failed",
                 "name": "call",
-                "Captured stdout call": "call str 2\n"
+                "stdout": "call str 2\n"
             },
             "teardown": {
                 "outcome": "passed",
                 "name": "teardown",
-                "Captured stdout teardown": "tearing down\n"
+                "stdout": "tearing down\n"
             },
             "name": "test_report.py::test_fail_with_fixture",
             "setup": {
-                "Captured stdout setup": "setting up\n",
+                "stdout": "setting up\n",
                 "outcome": "passed",
                 "name": "setup"
             }
@@ -75,7 +75,7 @@ def expected_data():
                 "name": "call",
                 "longrepr": "@pytest.mark.xfail(reason='testing xfail')\n    def test_xfailed():\n        print('I am xfailed')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:33: AssertionError",
                 "xfail_reason": "testing xfail",
-                "Captured stdout call": "I am xfailed\n"
+                "stdout": "I am xfailed\n"
             },
             "teardown": {
                 "outcome": "passed",
@@ -93,7 +93,7 @@ def expected_data():
                 "xfail_reason": "testing xfail",
                 "outcome": "xpassed",
                 "name": "call",
-                "Captured stdout call": "I am xfailed but passing\n"
+                "stdout": "I am xfailed but passing\n"
             },
             "teardown": {
                 "outcome": "passed",
@@ -110,7 +110,7 @@ def expected_data():
             "call": {
                 "outcome": "passed",
                 "name": "call",
-                "Captured stdout call": "I will fail during teardown\n"
+                "stdout": "I will fail during teardown\n"
             },
             "teardown": {
                 "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError",
@@ -128,7 +128,7 @@ def expected_data():
             "call": {
                 "outcome": "passed",
                 "name": "call",
-                "Captured stdout call": "call str\n"
+                "stdout": "call str\n"
             },
             "teardown": {
                 "outcome": "passed",
@@ -289,14 +289,16 @@ def test_metadata(testdir):
 def test_normalize_ember(testdir):
     testdir.makepyfile("""
         def test_foo():
+            print('I am foo')
             assert 1 == 1
 
         def test_bar():
+            print('I am bar')
             assert 2 == 2
     """)
 
     # run pytest with the following cmd args
-    testdir.runpytest(
+    result = testdir.runpytest(
         '--json=herpaderp.json',
         '--normalize-ember',
         '-v'
@@ -311,6 +313,8 @@ def test_normalize_ember(testdir):
 
     for test_id in report['report']['tests']:
         _assert_test_with_id(test_id, report['tests'])
+
+    assert result.ret == 0
 
 
 def _assert_test_with_id(id, tests):

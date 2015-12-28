@@ -70,10 +70,11 @@ class JSONReport(object):
             stage_dict['longrepr'] = str(report.longrepr)
 
         # only show stdout/stderr for the current stage
-        stage_matcher = re.compile(r'^Captured.*{}$'.format(report.when))
+        stage_matcher = re.compile(r'^Captured (.+) {}$'.format(report.when))
         for header, content in report.sections:
-            if stage_matcher.match(header):
-                stage_dict[header] = content
+            match = stage_matcher.match(header)
+            if match:
+                stage_dict[match.group(1)] = content
 
         if report.nodeid not in self.reports:
             self.reports[report.nodeid] = {
