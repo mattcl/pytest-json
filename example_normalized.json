@@ -1,0 +1,63 @@
+{
+  "tests": [
+    {
+      "id": 1,
+      "teardown": {
+        "outcome": "passed",
+        "duration": 7.534027099609375e-05,
+        "name": "teardown"
+      },
+      "call": {
+        "outcome": "passed",
+        "duration": 7.963180541992188e-05,
+        "name": "call"
+      },
+      "duration": 0.000545501708984375,
+      "outcome": "passed",
+      "setup": {
+        "outcome": "passed",
+        "duration": 0.0001952648162841797,
+        "name": "setup"
+      },
+      "name": "test_normalize_ember.py::test_bar"
+    },
+    {
+      "id": 2,
+      "teardown": {
+        "outcome": "passed",
+        "duration": 7.033348083496094e-05,
+        "name": "teardown"
+      },
+      "call": {
+        "outcome": "passed",
+        "duration": 8.392333984375e-05,
+        "name": "call"
+      },
+      "duration": 0.0006449222564697266,
+      "outcome": "passed",
+      "setup": {
+        "outcome": "passed",
+        "duration": 0.0002453327178955078,
+        "name": "setup"
+      },
+      "name": "test_normalize_ember.py::test_foo"
+    }
+  ],
+  "report": {
+    "environment": {
+      "Platform": "Linux-3.5.0-40-generic-x86_64-with-Ubuntu-12.04-precise",
+      "Python": "3.5.1"
+    },
+    "tests": [
+      1,
+      2
+    ],
+    "id": 1,
+    "summary": {
+      "passed": 2,
+      "num_tests": 2,
+      "duration": 0.009064674377441406
+    },
+    "created_at": "2015-12-28 10:54:13.442876"
+  }
+}

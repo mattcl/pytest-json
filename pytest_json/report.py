@@ -15,9 +15,10 @@ if not PY3:
 
 
 class JSONReport(object):
-    def __init__(self, json_path):
+    def __init__(self, json_path, normalize):
         self.json_path = os.path.abspath(
             os.path.expanduser(os.path.expandvars(json_path)))
+        self.normalize = normalize
         self.reports = {}
         self.summary = {}
 
@@ -97,6 +98,33 @@ class JSONReport(object):
 
         return report['call']['outcome']
 
+    def _default_report(self, env, tests, created_at):
+        return {
+            'report': {
+                'environment': env,
+                'tests': tests,
+                'summary': self.summary,
+                'created_at': created_at
+            }
+        }
+
+    def _normalize(self, env, tests, created_at):
+        test_index = 1
+        for test in tests:
+            test['id'] = test_index
+            test_index += 1
+
+        return {
+            'report': {
+                'id': 1,  # this is arbitrary for now
+                'environment': env,
+                'tests': [test['id'] for test in tests],
+                'summary': self.summary,
+                'created_at': created_at
+            },
+            'tests': tests
+        }
+
     def pytest_sessionfinish(self, session):
         session_stop_time = time.time()
         session_duration = session_stop_time - self.session_start_time
@@ -118,14 +146,10 @@ class JSONReport(object):
             report['outcome'] = self._get_overall_outcome(report)
             tests.append(report)
 
-        report = {
-            'report': {
-                'environment': env,
-                'tests': tests,
-                'summary': self.summary,
-                'created_at': created_at
-            }
-        }
+        if self.normalize:
+            report = self._normalize(env, tests, created_at)
+        else:
+            report = self._default_report(env, tests, created_at)
 
         if not os.path.exists(os.path.dirname(self.json_path)):
             os.makedirs(os.path.dirname(self.json_path))

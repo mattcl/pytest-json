@@ -15,6 +15,13 @@ def pytest_addoption(parser):
         default=None,
         help='where to store the JSON report'
     )
+    group.addoption(
+        '--normalize-ember',
+        action='store_true',
+        dest='normalize_ember',
+        default=False,
+        help='normalize the report for consumption by ember'
+    )
     parser.addini('json_report', 'where to store the JSON report')
 
 
@@ -48,7 +55,7 @@ def pytest_configure(config):
     json_path = _json_path(config)
 
     if json_path and not hasattr(config, 'slaveinput'):
-        config._json = JSONReport(json_path)
+        config._json = JSONReport(json_path, config.option.normalize_ember)
         config.pluginmanager.register(config._json)
 
     if hasattr(config, 'slaveoutput'):

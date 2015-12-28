@@ -286,6 +286,43 @@ def test_metadata(testdir):
     assert foo_data['teardown']['metadata'] == {'herp': 'derp'}
 
 
+def test_normalize_ember(testdir):
+    testdir.makepyfile("""
+        def test_foo():
+            assert 1 == 1
+
+        def test_bar():
+            assert 2 == 2
+    """)
+
+    # run pytest with the following cmd args
+    testdir.runpytest(
+        '--json=herpaderp.json',
+        '--normalize-ember',
+        '-v'
+    )
+
+    with open('herpaderp.json', 'r') as f:
+        report = json.load(f)
+
+
+    assert len(report['report']['tests']) == 2
+    assert len(report['tests']) == 2
+
+    for test_id in report['report']['tests']:
+        _assert_test_with_id(test_id, report['tests'])
+
+
+def _assert_test_with_id(id, tests):
+    found = False
+    for test in tests:
+        if test['id'] == id:
+            found = True
+            break
+
+    assert found
+
+
 def test_ini(testdir):
     testdir.makeini("""
         [pytest]
@@ -348,5 +385,6 @@ def test_help_message(testdir):
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
         '*--json=JSON_PATH*where to store the JSON report',
+        '*--normalize-ember*normalize the report for consumption by ember',
         '*json_report (string)*where to store the JSON report',
     ])
