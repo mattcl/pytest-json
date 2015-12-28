@@ -53,33 +53,49 @@ class JSONReport(object):
 
         self._update_summary(outcome, report)
 
-        report_dict = {
+        stage_dict = {
+            'name': report.when,
             'duration': getattr(report, 'duration', 0.0),
             'outcome': outcome
         }
 
         if hasattr(report, 'metadata'):
-            report_dict['metadata'] = report.metadata
+            stage_dict['metadata'] = report.metadata
 
         if hasattr(report, 'wasxfail'):
-            report_dict['xfail_reason'] = report.wasxfail
+            stage_dict['xfail_reason'] = report.wasxfail
 
         if report.longrepr:
-            report_dict['longrepr'] = str(report.longrepr)
+            stage_dict['longrepr'] = str(report.longrepr)
 
         # only show stdout/stderr for the current stage
         stage_matcher = re.compile(r'^Captured.*{}$'.format(report.when))
         for header, content in report.sections:
             if stage_matcher.match(header):
-                report_dict[header] = content
+                stage_dict[header] = content
 
         if report.nodeid not in self.reports:
-            self.reports[report.nodeid] = {}
+            self.reports[report.nodeid] = {
+                'name': report.nodeid,
+                'duration': stage_dict['duration']
+            }
 
-        self.reports[report.nodeid][report.when] = report_dict
+        self.reports[report.nodeid][report.when] = stage_dict
+        self.reports[report.nodeid]['duration'] += stage_dict['duration']
 
     def pytest_sessionstart(self, session):
         self.session_start_time = time.time()
+
+    def _get_overall_outcome(self, report):
+        if report['setup']['outcome'] != 'passed':
+            return report['setup']['outcome']
+
+        # if the call has passed, just return the outcome of teardown (which
+        # might be an error)
+        if report['call']['outcome'] == 'passed':
+            return report['teardown']['outcome']
+
+        return report['call']['outcome']
 
     def pytest_sessionfinish(self, session):
         session_stop_time = time.time()
@@ -96,9 +112,15 @@ class JSONReport(object):
         self.summary['num_tests'] = len(self.reports)
         self.summary['duration'] = session_duration
 
+        # format the reports
+        tests = []
+        for test, report in self.reports.items():
+            report['outcome'] = self._get_overall_outcome(report)
+            tests.append(report)
+
         report = {
             'environment': env,
-            'tests': self.reports,
+            'tests': tests,
             'summary': self.summary,
             'created_at': str(created)
         }

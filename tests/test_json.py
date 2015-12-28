@@ -21,92 +21,126 @@ def expected_data():
     else:
         skipped_longrepr = "('test_report.py', 47, 'Skipped: testing skip')"
 
-    return {
-        "test_report.py::test_xfailed_but_passing": {
+    return [
+        {
+            "outcome": "skipped",
+            "name": "test_report.py::test_skipped",
             "teardown": {
-                "outcome": "passed"
-            },
-            "setup": {
-                "outcome": "passed"
-            },
-            "call": {
-                "xfail_reason": "testing xfail",
-                "Captured stdout call": "I am xfailed but passing\n",
-                "outcome": "xpassed"
-            }
-        },
-        "test_report.py::test_skipped": {
-            "teardown": {
-                "outcome": "passed"
+                "outcome": "passed",
+                "name": "teardown"
             },
             "setup": {
                 "longrepr": skipped_longrepr,
-                "outcome": "skipped"
+                "outcome": "skipped",
+                "name": "setup"
             }
         },
-        "test_report.py::test_fail_during_setup": {
+        {
+            "outcome": "failed",
+            "call": {
+                "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError",
+                "outcome": "failed",
+                "name": "call",
+                "Captured stdout call": "call str 2\n"
+            },
             "teardown": {
-                "outcome": "passed"
+                "outcome": "passed",
+                "name": "teardown",
+                "Captured stdout teardown": "tearing down\n"
+            },
+            "name": "test_report.py::test_fail_with_fixture",
+            "setup": {
+                "Captured stdout setup": "setting up\n",
+                "outcome": "passed",
+                "name": "setup"
+            }
+        },
+        {
+            "outcome": "error",
+            "name": "test_report.py::test_fail_during_setup",
+            "teardown": {
+                "outcome": "passed",
+                "name": "teardown"
             },
             "setup": {
                 "longrepr": "request = <SubRequest 'fail_setup_fixture' for <Function 'test_fail_during_setup'>>\n\n    @pytest.fixture\n    def fail_setup_fixture(request):\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:13: AssertionError",
-                "outcome": "error"
+                "outcome": "error",
+                "name": "setup"
             }
         },
-        "test_report.py::test_basic": {
-            "teardown": {
-                "outcome": "passed"
-            },
-            "setup": {
-                "outcome": "passed"
-            },
+        {
+            "outcome": "xfailed",
             "call": {
-                "Captured stdout call": "call str\n",
-            }
-        },
-        "test_report.py::test_fail_with_fixture": {
-            "teardown": {
-                "Captured stdout teardown": "tearing down\n",
-                "outcome": "passed"
-            },
-            "setup": {
-                "Captured stdout setup": "setting up\n",
-                "outcome": "passed"
-            },
-            "call": {
-                "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError",
-                "Captured stdout call": "call str 2\n",
-                "outcome": "failed"
-            }
-        },
-        "test_report.py::test_fail_during_teardown": {
-            "teardown": {
-                "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError",
-                "outcome": "error"
-            },
-            "setup": {
-                "outcome": "passed"
-            },
-            "call": {
-                "Captured stdout call": "I will fail during teardown\n",
-                "outcome": "passed"
-            }
-        },
-        "test_report.py::test_xfailed": {
-            "teardown": {
-                "outcome": "passed"
-            },
-            "setup": {
-                "outcome": "passed"
-            },
-            "call": {
+                "outcome": "xfailed",
+                "name": "call",
                 "longrepr": "@pytest.mark.xfail(reason='testing xfail')\n    def test_xfailed():\n        print('I am xfailed')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:33: AssertionError",
                 "xfail_reason": "testing xfail",
-                "Captured stdout call": "I am xfailed\n",
-                "outcome": "xfailed"
+                "Captured stdout call": "I am xfailed\n"
+            },
+            "teardown": {
+                "outcome": "passed",
+                "name": "teardown"
+            },
+            "name": "test_report.py::test_xfailed",
+            "setup": {
+                "outcome": "passed",
+                "name": "setup"
+            }
+        },
+        {
+            "outcome": "xpassed",
+            "call": {
+                "xfail_reason": "testing xfail",
+                "outcome": "xpassed",
+                "name": "call",
+                "Captured stdout call": "I am xfailed but passing\n"
+            },
+            "teardown": {
+                "outcome": "passed",
+                "name": "teardown"
+            },
+            "name": "test_report.py::test_xfailed_but_passing",
+            "setup": {
+                "outcome": "passed",
+                "name": "setup"
+            }
+        },
+        {
+            "outcome": "error",
+            "call": {
+                "outcome": "passed",
+                "name": "call",
+                "Captured stdout call": "I will fail during teardown\n"
+            },
+            "teardown": {
+                "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError",
+                "outcome": "error",
+                "name": "teardown"
+            },
+            "name": "test_report.py::test_fail_during_teardown",
+            "setup": {
+                "outcome": "passed",
+                "name": "setup"
+            }
+        },
+        {
+            "outcome": "passed",
+            "call": {
+                "outcome": "passed",
+                "name": "call",
+                "Captured stdout call": "call str\n"
+            },
+            "teardown": {
+                "outcome": "passed",
+                "name": "teardown"
+            },
+            "name": "test_report.py::test_basic",
+            "setup": {
+                "outcome": "passed",
+                "name": "setup"
             }
         }
-    }
+    ]
 
 
 # so because testdir can't be session-scoped, do this all in one test
@@ -185,12 +219,23 @@ def test_report(testdir, expected_data):
 
     # tests
     assert len(report['tests']) == 7
-    for test, stage_data in expected_data.items():
-        assert test in report['tests']
 
-        for stage, data in stage_data.items():
-            for key, value in data.items():
-                assert report['tests'][test][stage][key] == value
+    tests = {}
+    for test in report['tests']:
+        tests[test['name']] = test
+
+    for expected in expected_data:
+        test_name = expected['name']
+
+        assert test_name in tests
+
+        test = tests[test_name]
+        assert test['outcome'] == expected['outcome']
+
+        for stage in ['setup', 'teardown', 'call']:
+            if stage in expected:
+                for key, value in expected[stage].items():
+                    assert test[stage][key] == value
 
 
 def test_metadata(testdir):
@@ -231,7 +276,7 @@ def test_metadata(testdir):
 
     assert len(report['tests']) == 1
 
-    foo_data = report['tests']['test_metadata.py::test_foo']
+    foo_data = report['tests'][0]
     assert foo_data['call']['metadata'] == {'foo': 'bar'}
     assert foo_data['setup']['metadata'] == {'hoof': 'doof'}
     assert foo_data['teardown']['metadata'] == {'herp': 'derp'}
