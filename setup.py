@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name='pytest-json',
-    version='0.2.0',
+    version='0.2.1',
     author='Matt Chun-Lum',
     author_email='mchunlum@gmail.com',
     maintainer='Matt Chun-Lum',

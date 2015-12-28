@@ -208,6 +208,8 @@ def test_report(testdir, expected_data):
     with open('herpaderp.json', 'r') as f:
         report = json.load(f)
 
+    report = report['report']
+
     # summary
     assert report['summary']['num_tests'] == 7
     assert report['summary']['xfailed'] == 1
@@ -273,6 +275,8 @@ def test_metadata(testdir):
 
     with open('herpaderp.json', 'r') as f:
         report = json.load(f)
+
+    report = report['report']
 
     assert len(report['tests']) == 1
 

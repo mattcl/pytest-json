@@ -107,7 +107,7 @@ class JSONReport(object):
                 env[key] = value
 
         created = datetime.datetime.now()
-        created.strftime('%d-%b-%Y %H:%M:%S')
+        created_at = str(created)
 
         self.summary['num_tests'] = len(self.reports)
         self.summary['duration'] = session_duration
@@ -119,10 +119,12 @@ class JSONReport(object):
             tests.append(report)
 
         report = {
-            'environment': env,
-            'tests': tests,
-            'summary': self.summary,
-            'created_at': str(created)
+            'report': {
+                'environment': env,
+                'tests': tests,
+                'summary': self.summary,
+                'created_at': created_at
+            }
         }
 
         if not os.path.exists(os.path.dirname(self.json_path)):
