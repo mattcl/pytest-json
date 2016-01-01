@@ -15,10 +15,10 @@ if not PY3:
 
 
 class JSONReport(object):
-    def __init__(self, json_path, normalize):
+    def __init__(self, json_path, jsonapi):
         self.json_path = os.path.abspath(
             os.path.expanduser(os.path.expandvars(json_path)))
-        self.normalize = normalize
+        self.jsonapi = jsonapi
         self.reports = {}
         self.summary = {}
 
@@ -109,21 +109,37 @@ class JSONReport(object):
             }
         }
 
-    def _normalize(self, env, tests, created_at):
+    def _jsonapi(self, env, tests, created_at):
         test_index = 1
+        normalized_tests = []
         for test in tests:
-            test['id'] = test_index
+            normalized_tests.append({
+                'id': test_index,
+                'type': 'test',
+                'attributes': test
+            })
             test_index += 1
 
         return {
-            'report': {
-                'id': 1,  # this is arbitrary for now
-                'environment': env,
-                'tests': [test['id'] for test in tests],
-                'summary': self.summary,
-                'created_at': created_at
-            },
-            'tests': tests
+            'data': [
+                {
+                    'type': 'report',
+                    'id': 1,  # this is arbitrary for now
+                    'attributes': {
+                        'environment': env,
+                        'summary': self.summary,
+                        'created_at': created_at
+                    },
+                    'relationships': {
+                        'tests': {
+                            'data': [
+                                {'id': test['id'], 'type': 'test'} for test in normalized_tests
+                            ]
+                        }
+                    }
+                }
+            ],
+            'included': normalized_tests
         }
 
     def pytest_sessionfinish(self, session):
@@ -147,8 +163,8 @@ class JSONReport(object):
             report['outcome'] = self._get_overall_outcome(report)
             tests.append(report)
 
-        if self.normalize:
-            report = self._normalize(env, tests, created_at)
+        if self.jsonapi:
+            report = self._jsonapi(env, tests, created_at)
         else:
             report = self._default_report(env, tests, created_at)
 

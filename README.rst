@@ -12,7 +12,8 @@ reports for test results
 
 ----
 
-This `Pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `Cookiecutter-pytest-plugin`_ template.
+This `Pytest`_ plugin was generated with `Cookiecutter`_ along with
+`@hackebrot`_'s `Cookiecutter-pytest-plugin`_ template.
 
 
 Requirements
@@ -44,10 +45,11 @@ or you can set the report path in an ini file::
 
 The command-line option will override the ini file
 
-There is an optional flag to normalize the generated report. This is intended
-for (easier) consumption by ember-data.::
+There is an optional flag to normalize the generated report to
+`jsonapi <http://jsonapi.org>`_. This is intended for (easier) consumption by
+ember-data and others::
 
-  $ py.test --json=report.json --normalize-ember
+  $ py.test --json=report.json --jsonapi
 
 
 Adding to environment
