@@ -172,7 +172,7 @@ class JSONReport(object):
             os.makedirs(os.path.dirname(self.json_path))
 
         with open(self.json_path, 'w', encoding='utf-8') as f:
-            json.dump(report, f)
+            f.write(json.dumps(report))
 
     def pytest_terminal_summary(self, terminalreporter):
         terminalreporter.write_sep('-', 'generated json report: {0}'.format(
