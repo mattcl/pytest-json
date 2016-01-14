@@ -23,6 +23,9 @@ def pytest_addoption(parser):
         help='make the report conform to jsonapi'
     )
     parser.addini('json_report', 'where to store the JSON report')
+    parser.addini('jsonapi',
+                  'if present (any value), export JSON report as jsonapi',
+                  default=False)
 
 
 # pytest-html uses _environment already, don't conflict with it
@@ -55,7 +58,8 @@ def pytest_configure(config):
     json_path = _json_path(config)
 
     if json_path and not hasattr(config, 'slaveinput'):
-        config._json = JSONReport(json_path, config.option.jsonapi)
+        jsonapi = config.option.jsonapi or config.getini('json_report')
+        config._json = JSONReport(json_path, jsonapi)
         config.pluginmanager.register(config._json)
 
     if hasattr(config, 'slaveoutput'):

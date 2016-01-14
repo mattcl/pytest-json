@@ -51,6 +51,13 @@ ember-data and others::
 
   $ py.test --json=report.json --jsonapi
 
+or you can set the jsonapi flag in an ini file::
+
+  [pytest]
+  jsonapi = anything
+
+Note that the value of the ini var can be anything. Presence alone will cause
+it to be true.
 
 Adding to environment
 ---------------------

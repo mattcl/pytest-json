@@ -314,7 +314,7 @@ def test_jsonapi(testdir):
     assert result.ret == 0
 
 
-def test_ini(testdir):
+def test_report_ini(testdir):
     testdir.makeini("""
         [pytest]
         json_report = foo.json
@@ -355,6 +355,33 @@ def test_option_overrides_ini(testdir):
     assert result.ret == 0
 
 
+def test_jsonapi_ini(testdir):
+    testdir.makeini("""
+        [pytest]
+        json_report = foo.json
+        jsonapi = Anything
+    """)
+
+    testdir.makepyfile("""
+        def test_foo(json_report_path):
+            assert json_report_path == 'foo.json'
+    """)
+
+    # run pytest with the following cmd args
+    result = testdir.runpytest(
+        '-v'
+    )
+
+    assert os.path.exists('foo.json')
+    assert result.ret == 0
+
+    with open('foo.json', 'r') as f:
+        report = json.load(f)
+
+    assert 'included' in report
+    assert 'data' in report
+
+
 def test_no_json_ok(testdir):
     testdir.makepyfile("""
         def test_foo():
@@ -378,4 +405,5 @@ def test_help_message(testdir):
         '*--json=JSON_PATH*where to store the JSON report',
         '*--jsonapi*make the report conform to jsonapi',
         '*json_report (string)*where to store the JSON report',
+        '*jsonapi (string)*if present (any value), export JSON report as jsonapi',
     ])
