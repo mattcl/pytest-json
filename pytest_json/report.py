@@ -21,6 +21,7 @@ class JSONReport(object):
         self.jsonapi = jsonapi
         self.reports = {}
         self.summary = {}
+        self.run_index = 0
 
     def _get_outcome(self, report):
         if report.failed:
@@ -79,8 +80,10 @@ class JSONReport(object):
         if report.nodeid not in self.reports:
             self.reports[report.nodeid] = {
                 'name': report.nodeid,
-                'duration': stage_dict['duration']
+                'duration': stage_dict['duration'],
+                'run_index': self.run_index
             }
+            self.run_index += 1
 
         self.reports[report.nodeid][report.when] = stage_dict
         self.reports[report.nodeid]['duration'] += stage_dict['duration']

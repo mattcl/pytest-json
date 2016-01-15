@@ -1,165 +1,172 @@
 {
   "report": {
+    "created_at": "2016-01-15 13:32:37.498888",
+    "environment": {
+      "Python": "3.5.1",
+      "Platform": "Linux-3.5.0-40-generic-x86_64-with-Ubuntu-12.04-precise"
+    },
     "tests": [
       {
-        "duration": 0.0005567073822021484,
+        "outcome": "skipped",
+        "name": "test_report.py::test_skipped",
+        "duration": 0.00028252601623535156,
+        "teardown": {
+          "duration": 7.224082946777344e-05,
+          "outcome": "passed",
+          "name": "teardown"
+        },
+        "run_index": 6,
+        "setup": {
+          "duration": 0.00010514259338378906,
+          "outcome": "skipped",
+          "longrepr": "('test_report.py', 47, 'Skipped: testing skip')",
+          "name": "setup"
+        }
+      },
+      {
+        "outcome": "passed",
+        "name": "test_report.py::test_basic",
+        "duration": 0.0008590221405029297,
+        "teardown": {
+          "duration": 7.987022399902344e-05,
+          "outcome": "passed",
+          "name": "teardown"
+        },
+        "run_index": 0,
+        "setup": {
+          "duration": 0.0003209114074707031,
+          "outcome": "passed",
+          "name": "setup"
+        },
+        "call": {
+          "duration": 0.0001373291015625,
+          "stdout": "call str\n",
+          "outcome": "passed",
+          "name": "call"
+        }
+      },
+      {
+        "outcome": "xpassed",
         "name": "test_report.py::test_xfailed_but_passing",
+        "duration": 0.0006396770477294922,
+        "teardown": {
+          "duration": 6.937980651855469e-05,
+          "outcome": "passed",
+          "name": "teardown"
+        },
+        "run_index": 3,
+        "setup": {
+          "duration": 0.00023221969604492188,
+          "outcome": "passed",
+          "name": "setup"
+        },
         "call": {
           "duration": 0.00010585784912109375,
-          "name": "call",
-          "outcome": "xpassed",
           "stdout": "I am xfailed but passing\n",
-          "xfail_reason": "testing xfail"
-        },
-        "outcome": "xpassed",
-        "teardown": {
-          "duration": 6.794929504394531e-05,
-          "name": "teardown",
-          "outcome": "passed"
-        },
-        "setup": {
-          "duration": 0.0001914501190185547,
-          "name": "setup",
-          "outcome": "passed"
+          "outcome": "xpassed",
+          "xfail_reason": "testing xfail",
+          "name": "call"
         }
       },
       {
-        "duration": 0.0008294582366943359,
-        "name": "test_report.py::test_basic",
-        "call": {
-          "duration": 0.0001392364501953125,
-          "name": "call",
-          "outcome": "passed",
-          "stdout": "call str\n"
-        },
-        "outcome": "passed",
-        "teardown": {
-          "duration": 8.034706115722656e-05,
-          "name": "teardown",
-          "outcome": "passed"
-        },
-        "setup": {
-          "duration": 0.00030493736267089844,
-          "name": "setup",
-          "outcome": "passed"
-        }
-      },
-      {
-        "duration": 0.0002894401550292969,
-        "name": "test_report.py::test_skipped",
-        "outcome": "skipped",
-        "teardown": {
-          "duration": 7.104873657226562e-05,
-          "name": "teardown",
-          "outcome": "passed"
-        },
-        "setup": {
-          "duration": 0.00010919570922851562,
-          "name": "setup",
-          "outcome": "skipped",
-          "longrepr": "('test_report.py', 47, 'Skipped: testing skip')"
-        }
-      },
-      {
-        "duration": 0.0007500648498535156,
-        "name": "test_report.py::test_xfailed",
-        "call": {
-          "duration": 0.00025773048400878906,
-          "name": "call",
-          "stdout": "I am xfailed\n",
-          "longrepr": "@pytest.mark.xfail(reason='testing xfail')\n    def test_xfailed():\n        print('I am xfailed')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:33: AssertionError",
-          "outcome": "xfailed",
-          "xfail_reason": "testing xfail"
-        },
-        "outcome": "xfailed",
-        "teardown": {
-          "duration": 9.322166442871094e-05,
-          "name": "teardown",
-          "outcome": "passed"
-        },
-        "setup": {
-          "duration": 0.0001995563507080078,
-          "name": "setup",
-          "outcome": "passed"
-        }
-      },
-      {
-        "duration": 0.0007624626159667969,
+        "outcome": "error",
         "name": "test_report.py::test_fail_during_teardown",
-        "call": {
-          "duration": 0.00011777877807617188,
-          "name": "call",
-          "outcome": "passed",
-          "stdout": "I will fail during teardown\n"
-        },
-        "outcome": "error",
+        "duration": 0.0007836818695068359,
         "teardown": {
-          "duration": 0.00015926361083984375,
-          "name": "teardown",
+          "duration": 0.0001633167266845703,
           "outcome": "error",
-          "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError"
+          "longrepr": "def fn():\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:18: AssertionError",
+          "name": "teardown"
         },
+        "run_index": 5,
         "setup": {
-          "duration": 0.00024271011352539062,
-          "name": "setup",
-          "outcome": "passed"
+          "duration": 0.00025153160095214844,
+          "outcome": "passed",
+          "name": "setup"
+        },
+        "call": {
+          "duration": 0.00011730194091796875,
+          "stdout": "I will fail during teardown\n",
+          "outcome": "passed",
+          "name": "call"
         }
       },
       {
-        "duration": 0.0010826587677001953,
-        "name": "test_report.py::test_fail_with_fixture",
-        "call": {
-          "duration": 0.0004017353057861328,
-          "name": "call",
-          "outcome": "failed",
-          "stdout": "call str 2\n",
-          "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError"
+        "outcome": "xfailed",
+        "name": "test_report.py::test_xfailed",
+        "duration": 0.0007143020629882812,
+        "teardown": {
+          "duration": 7.700920104980469e-05,
+          "outcome": "passed",
+          "name": "teardown"
         },
+        "run_index": 2,
+        "setup": {
+          "duration": 0.00020122528076171875,
+          "outcome": "passed",
+          "name": "setup"
+        },
+        "call": {
+          "outcome": "xfailed",
+          "longrepr": "@pytest.mark.xfail(reason='testing xfail')\n    def test_xfailed():\n        print('I am xfailed')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:33: AssertionError",
+          "name": "call",
+          "xfail_reason": "testing xfail",
+          "stdout": "I am xfailed\n",
+          "duration": 0.00023484230041503906
+        }
+      },
+      {
         "outcome": "failed",
+        "name": "test_report.py::test_fail_with_fixture",
+        "duration": 0.0010652542114257812,
         "teardown": {
-          "duration": 0.0001163482666015625,
-          "name": "teardown",
+          "duration": 0.00011587142944335938,
+          "stdout": "tearing down\n",
           "outcome": "passed",
-          "stdout": "tearing down\n"
+          "name": "teardown"
         },
+        "run_index": 1,
         "setup": {
-          "duration": 0.00028228759765625,
-          "name": "setup",
+          "duration": 0.00027680397033691406,
+          "stdout": "setting up\n",
           "outcome": "passed",
-          "stdout": "setting up\n"
+          "name": "setup"
+        },
+        "call": {
+          "duration": 0.00039577484130859375,
+          "stdout": "call str 2\n",
+          "outcome": "failed",
+          "longrepr": "setup_teardown_fixture = None\n\n    def test_fail_with_fixture(setup_teardown_fixture):\n        print('call str 2')\n>       assert 1 == 2\nE       assert 1 == 2\n\ntest_report.py:28: AssertionError",
+          "name": "call"
         }
       },
       {
-        "duration": 0.0007333755493164062,
-        "name": "test_report.py::test_fail_during_setup",
         "outcome": "error",
+        "name": "test_report.py::test_fail_during_setup",
+        "duration": 0.0008416175842285156,
         "teardown": {
-          "duration": 6.818771362304688e-05,
-          "name": "teardown",
-          "outcome": "passed"
+          "duration": 0.0001220703125,
+          "outcome": "passed",
+          "name": "teardown"
         },
+        "run_index": 4,
         "setup": {
-          "duration": 0.0003325939178466797,
-          "name": "setup",
+          "duration": 0.0003597736358642578,
           "outcome": "error",
-          "longrepr": "request = <SubRequest 'fail_setup_fixture' for <Function 'test_fail_during_setup'>>\n\n    @pytest.fixture\n    def fail_setup_fixture(request):\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:13: AssertionError"
+          "longrepr": "request = <SubRequest 'fail_setup_fixture' for <Function 'test_fail_during_setup'>>\n\n    @pytest.fixture\n    def fail_setup_fixture(request):\n>       assert 1 == 3\nE       assert 1 == 3\n\ntest_report.py:13: AssertionError",
+          "name": "setup"
         }
       }
     ],
     "summary": {
       "num_tests": 7,
-      "duration": 0.031156539916992188,
-      "xpassed": 1,
-      "skipped": 1,
       "xfailed": 1,
+      "skipped": 1,
       "passed": 2,
+      "failed": 1,
       "error": 2,
-      "failed": 1
-    },
-    "environment": {
-      "Python": "3.5.1",
-      "Platform": "Linux-3.5.0-40-generic-x86_64-with-Ubuntu-12.04-precise"
-    },
-    "created_at": "2015-12-28 11:17:35.316276"
+      "xpassed": 1,
+      "duration": 0.030298233032226562
+    }
   }
 }
