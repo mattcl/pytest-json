@@ -19,9 +19,10 @@ class JSONReport(object):
         self.json_path = os.path.abspath(
             os.path.expanduser(os.path.expandvars(json_path)))
         self.jsonapi = jsonapi
-        self.reports = {}
+        self.nodes = {}
         self.summary = {}
         self.run_index = 0
+        self.report = {}
 
     def _get_outcome(self, report):
         if report.failed:
@@ -50,10 +51,8 @@ class JSONReport(object):
         else:
             self.summary[outcome] += 1
 
-    def pytest_runtest_logreport(self, report):
+    def _make_stage_dict(self, report):
         outcome = self._get_outcome(report)
-
-        self._update_summary(outcome, report)
 
         stage_dict = {
             'name': report.when,
@@ -61,8 +60,8 @@ class JSONReport(object):
             'outcome': outcome
         }
 
-        if hasattr(report, 'metadata'):
-            stage_dict['metadata'] = report.metadata
+        if hasattr(report, 'stage_metadata'):
+            stage_dict['metadata'] = report.stage_metadata
 
         if hasattr(report, 'wasxfail'):
             stage_dict['xfail_reason'] = report.wasxfail
@@ -77,16 +76,38 @@ class JSONReport(object):
             if match:
                 stage_dict[match.group(1)] = content
 
-        if report.nodeid not in self.reports:
-            self.reports[report.nodeid] = {
+        return stage_dict
+
+    def pytest_runtest_logreport(self, report):
+        stage_dict = self._make_stage_dict(report)
+
+        self._update_summary(stage_dict['outcome'], report)
+
+        if hasattr(report, 'report_metadata'):
+            if 'metadata' not in self.report:
+                self.report['metadata'] = []
+
+            self.report['metadata'].append(report.report_metadata)
+
+        if report.nodeid not in self.nodes:
+            self.nodes[report.nodeid] = {
                 'name': report.nodeid,
                 'duration': stage_dict['duration'],
                 'run_index': self.run_index
             }
             self.run_index += 1
 
-        self.reports[report.nodeid][report.when] = stage_dict
-        self.reports[report.nodeid]['duration'] += stage_dict['duration']
+        self.nodes[report.nodeid][report.when] = stage_dict
+        self.nodes[report.nodeid]['duration'] += stage_dict['duration']
+
+        # do this after we know we've created the nodeid in reports
+        if hasattr(report, 'test_metadata'):
+            if 'metadata' not in self.nodes[report.nodeid]:
+                self.nodes[report.nodeid]['metadata'] = []
+
+            self.nodes[report.nodeid]['metadata'].append(
+                report.test_metadata)
+
 
     def pytest_sessionstart(self, session):
         self.session_start_time = time.time()
@@ -103,7 +124,7 @@ class JSONReport(object):
         return report['call']['outcome']
 
     def _default_report(self, env, tests, created_at):
-        return {
+        report = {
             'report': {
                 'environment': env,
                 'tests': tests,
@@ -111,6 +132,11 @@ class JSONReport(object):
                 'created_at': created_at
             }
         }
+
+        if 'metadata' in self.report:
+            report['report']['metadata'] = self.report['metadata']
+
+        return report
 
     def _jsonapi(self, env, tests, created_at):
         test_index = 1
@@ -123,7 +149,7 @@ class JSONReport(object):
             })
             test_index += 1
 
-        return {
+        report = {
             'data': [
                 {
                     'type': 'report',
@@ -145,6 +171,11 @@ class JSONReport(object):
             'included': normalized_tests
         }
 
+        if 'metadata' in self.report:
+            report['data']['attributes']['metadata'] = self.report['metadata']
+
+        return report
+
     def pytest_sessionfinish(self, session):
         session_stop_time = time.time()
         session_duration = session_stop_time - self.session_start_time
@@ -157,12 +188,12 @@ class JSONReport(object):
         created = datetime.datetime.now()
         created_at = str(created)
 
-        self.summary['num_tests'] = len(self.reports)
+        self.summary['num_tests'] = len(self.nodes)
         self.summary['duration'] = session_duration
 
         # format the reports
         tests = []
-        for test, report in self.reports.items():
+        for test, report in self.nodes.items():
             report['outcome'] = self._get_overall_outcome(report)
             tests.append(report)
 

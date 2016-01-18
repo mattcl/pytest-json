@@ -249,17 +249,19 @@ def test_metadata(testdir):
             outcome = yield
             report = outcome.get_result()
             if report.when == 'call':
-                report.metadata = {
+                report.stage_metadata = {
                     'foo': 'bar'
                 }
+                report.test_metadata = 'hi'
             elif report.when == 'setup':
-                report.metadata = {
+                report.stage_metadata = {
                     'hoof': 'doof'
                 }
             elif report.when == 'teardown':
-                report.metadata = {
+                report.stage_metadata = {
                     'herp': 'derp'
                 }
+                report.test_metadata = 'bye'
     """)
 
     testdir.makepyfile("""
@@ -281,6 +283,7 @@ def test_metadata(testdir):
     assert len(report['tests']) == 1
 
     foo_data = report['tests'][0]
+    assert foo_data['metadata'] == ['hi', 'bye']
     assert foo_data['call']['metadata'] == {'foo': 'bar'}
     assert foo_data['setup']['metadata'] == {'hoof': 'doof'}
     assert foo_data['teardown']['metadata'] == {'herp': 'derp'}

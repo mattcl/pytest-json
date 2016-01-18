@@ -1,5 +1,3 @@
-the json schema is highly in flux at the moment
-
 pytest-json
 ===================================
 
@@ -74,6 +72,9 @@ You can modify ``request.config._json_environment`` in a fixture
 Adding metadata per test stage
 ------------------------------
 
+Metadata added via ``stage_metadata`` shows up in ``metadata`` field of the
+stage in the resulting JSON object
+
 .. code-block:: python
 
   # conftest.py
@@ -82,17 +83,38 @@ Adding metadata per test stage
       outcome = yield
       report = outcome.get_result()
       if report.when == 'call':
-          report.metadata = {
+          report.stage_metadata = {
               'foo': 'bar'
           }
       elif report.when == 'setup':
-          report.metadata = {
+          report.stage_metadata = {
               'hoof': 'doof'
           }
       elif report.when == 'teardown':
-          report.metadata = {
+          report.stage_metadata = {
               'herp': 'derp'
           }
+
+
+Addint metadata per test
+------------------------
+
+Metadata added on the tests themselves are represented by an array. To avoid
+collisions, etc. Any stage (setup, teardown, call) that sets ``test_metadata``
+on a report will have its metadata appended to the array. Metadata added via
+``test_metadata`` ends up in the ``metadata`` field of the test in the
+resulting JSON object
+
+.. code-block:: python
+
+  # conftest.py
+  @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+  def pytest_runtest_makereport(item, call):
+      outcome = yield
+      report = outcome.get_result()
+      # only add this during call instead of during any stage
+      if report.when == 'call':
+          report.test_metadata = 'whatever'
 
 
 Compatibility with pytest-html
@@ -111,6 +133,8 @@ A formatted example of the output can be found in example.json
 
 The actual output is not formatted, but this was passed through jq for
 readability.
+
+A formatted example of the jsonapi output can be found in example_jsonapi.json
 
 Contributing
 ------------
