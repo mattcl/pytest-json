@@ -96,7 +96,7 @@ stage in the resulting JSON object
           }
 
 
-Addint metadata per test
+Adding metadata per test
 ------------------------
 
 Metadata added on the tests themselves are represented by an array. To avoid
